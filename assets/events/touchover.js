@@ -28,7 +28,7 @@
 (function () {
 
   var active = false;
-  var prevTarget = undefined;
+  var prevTouchTarget = undefined;
   var prevTouchoverParent = undefined;
 
   function findParentWithAttribute(node, attName) {
@@ -48,9 +48,9 @@
   function onTouchmove(e) {
     var pos = (e.touches && e.touches.length) ? e.touches[0] : e;
     var target = document.elementFromPoint(pos.clientX, pos.clientY);
-    if (target === prevTarget)
+    if (target === prevTouchTarget)
       return;
-    prevTarget = target;
+    prevTouchTarget = target;
     var touchoverParent = findParentWithAttribute(target, "touchover");
     if (touchoverParent === prevTouchoverParent)
       return;
@@ -73,7 +73,7 @@
   function end(e) {
     document.removeEventListener("touchmove", onTouchmove);
     active = false;
-    prevTarget = undefined;
+    prevTouchTarget = undefined;
     if (prevTouchoverParent) {
       prevTouchoverParent.dispatchEvent(new CustomEvent("touchleave", {detail: {leaveOnTarget: true}}));
       prevTouchoverParent = undefined;
